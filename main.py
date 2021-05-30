@@ -116,23 +116,23 @@ def main():
     logging.getLogger('').addHandler(console)
     logger = logging.getLogger(__name__)
     etfTargets = get_etf_list(Config.URL_NAVER_STOCK)
-    #etfTargets = ["069500"] for test
+    #etfTargets = ["069500"] #for test
     es = Elasticsearch(
     hosts=[{'host': "localhost", 'port': "9200"}])
-    documents = []
     
     for etf in etfTargets:
         try:
+            documents = []
             etfData = get_etf_info(etf)
             document = {
-               '_index': "etf-search-v1",
+               '_index': "etf-search-latest",
                '_source': etfData,
                '_id': etf
             }
             documents.append(document)
+            helpers.bulk(es, documents)
         except Exception as e:
             logging.info(e)
-    helpers.bulk(es, documents)
     
 if __name__ == "__main__":
     # execute only if run as a script
