@@ -41,8 +41,7 @@ def get_etf_info(id):
     options.add_argument('--disable-dev-shm-usage')
 
     logging.info(f"ETF ID [{id}] info start gathering from DAUM stock")
-    driver = webdriver.Chrome(chrome_options=options, executable_path="/usr/local/bin/chromedriver")
-
+    driver = webdriver.Chrome(options=options, executable_path="/usr/lib/chromium-browser/chromedriver")
     driver.implicitly_wait(time_to_wait=1)
     driver.get(url=target_source)
 
@@ -101,14 +100,6 @@ def get_etf_info(id):
     driver.close()
     return etfData
 
-def post_json_to_es(data):
-    
-    es = Elasticsearch(hosts="http://localhost:9200/")
-    document = {
-        '_index': "etf-search-v1",
-        '_source': data
-    }
-    helpers.bulk(es, document)
 
 def main():
     logging.basicConfig(
@@ -125,13 +116,23 @@ def main():
     logging.getLogger('').addHandler(console)
     logger = logging.getLogger(__name__)
     etfTargets = get_etf_list(Config.URL_NAVER_STOCK)
+    #etfTargets = ["069500"] for test
+    es = Elasticsearch(
+    hosts=[{'host': "localhost", 'port': "9200"}])
+    documents = []
     
     for etf in etfTargets:
         try:
             etfData = get_etf_info(etf)
-            post_json_to_es(etfData)
+            document = {
+               '_index': "etf-search-v1",
+               '_source': etfData,
+               '_id': etf
+            }
+            documents.append(document)
         except Exception as e:
             logging.info(e)
+    helpers.bulk(es, documents)
     
 if __name__ == "__main__":
     # execute only if run as a script
