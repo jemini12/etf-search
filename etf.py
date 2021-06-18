@@ -3,6 +3,15 @@ import datetime
 import json
 import logging
 
+import selenium
+from selenium import webdriver
+from selenium.webdriver import ActionChains
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import WebDriverWait
+
 from elasticsearch import Elasticsearch, helpers
 
 from config import Config 
@@ -94,7 +103,7 @@ def get_etf_info(id):
 
 def main():
     logging.basicConfig(
-        filename='etf-search.log',
+        filename='etf.log',
         format = '%(asctime)s:%(levelname)s:%(message)s',
         datefmt = '%m/%d/%Y %I:%M:%S %p',
         level = logging.INFO,
@@ -110,20 +119,24 @@ def main():
     #etfTargets = ["069500"] #for test
     es = Elasticsearch(
     hosts=[{'host': "localhost", 'port': "9200"}])
-    
+    logging.info("etf crawling start")
+    documents = []
     for etf in etfTargets:
-        try:
-            documents = []
-            etfData = get_etf_info(etf)
-            document = {
-               '_index': "etf-search-latest",
-               '_source': etfData,
-               '_id': etf
-            }
-            documents.append(document)
-            helpers.bulk(es, documents)
-        except Exception as e:
-            logging.info(e)
+        etfData = get_etf_info(etf)
+        document = {
+            '_index': "etf-search-latest",
+            '_source': etfData,
+            '_id': etf
+        }
+        logging.info(document)
+        documents.append(document)
+        
+    try:      
+        helpers.bulk(es, documents)
+    except Exception as e:
+        logging.info(e)
+        
+    logging.info("etf crawling end")
     
 if __name__ == "__main__":
     # execute only if run as a script
