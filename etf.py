@@ -62,10 +62,10 @@ def get_etf_info(id):
     # get etf profit information
     profits = driver.find_element_by_class_name("num.pd_bot_20")
     etfProfits = profits.find_elements_by_tag_name("span")
-    etfProfit1M = etfProfits[0].get_attribute('innerText')
-    etfProfit3M = etfProfits[1].get_attribute('innerText')
-    etfProfit6M = etfProfits[2].get_attribute('innerText')
-    etfProfit12M = etfProfits[3].get_attribute('innerText')
+    etfProfit1M = etfProfits[0].get_attribute('innerText') if etfProfits[0].get_attribute('innerText') else None
+    etfProfit3M = etfProfits[1].get_attribute('innerText') if etfProfits[1].get_attribute('innerText') else None
+    etfProfit6M = etfProfits[2].get_attribute('innerText') if etfProfits[2].get_attribute('innerText') else None
+    etfProfit12M = etfProfits[3].get_attribute('innerText') if etfProfits[3].get_attribute('innerText') else None
     etfProfits = {
                     "etfProfit1M": etfProfit1M,
                     "etfProfit3M": etfProfit3M,
@@ -81,7 +81,7 @@ def get_etf_info(id):
     for row in rows:
         #//*[@id="tbl-index0"]/tbody/tr[1]/td[1]
         stockName = row.find_element_by_class_name("c1").get_attribute('innerText')
-        stockPortion = row.find_element_by_class_name("c3").get_attribute('innerText')
+        stockPortion = row.find_element_by_class_name("c3").get_attribute('innerText') if row.find_element_by_class_name("c3").get_attribute('innerText') != "-" else None
         etfElements.append(
                 {
                     "stockName": stockName, 
@@ -93,7 +93,8 @@ def get_etf_info(id):
         "etfDescription": etfDescription,
         "etfElements": etfElements,
         "etfProfits": etfProfits,
-        "etfTypes": etfTypeList
+        "etfTypes": etfTypeList,
+        "timestamp": datetime.datetime.now()
     }
     #print(json.dumps(etfData,indent=4,ensure_ascii=False))
     logging.info(f"ETF ID [{id}] info gathered from DAUM stock")
@@ -105,7 +106,7 @@ def main():
     logging.basicConfig(
         filename='etf.log',
         format = '%(asctime)s:%(levelname)s:%(message)s',
-        datefmt = '%m/%d/%Y %I:%M:%S %p',
+        datefmt = '%m/%d/%Y %I:%M:%S %p %Z',
         level = logging.INFO,
         filemode="w"
     )

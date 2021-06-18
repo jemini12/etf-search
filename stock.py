@@ -23,19 +23,20 @@ def get_stock_data(url):
             if (not "blank" in str(tableCell)) and (not "division_line" in str(tableCell)):
                 code = tableCell[1].find("a")["href"].split("=")[1]
                 stockData = {
-                    '_index': "etf-search-latest",
-                    "stockName" : tableCell[1].getText() if tableCell[1].getText() != "N/A" else "-",
-                    "code": code if code != "N/A"  else "-",
-                    "price": tableCell[2].getText() if tableCell[2].getText() != "N/A"  else "-",
-                    "per":  tableCell[9].getText() if tableCell[9].getText() != "N/A"  else "-",
-                    "roe":  tableCell[10].getText() if tableCell[10].getText() != "N/A" else "-",
-                    "pbr":  tableCell[11].getText() if tableCell[11].getText() != "N/A" else "-",
+                    "stockName" : tableCell[1].getText() if tableCell[1].getText() != "N/A" else None,
+                    "code": code,
+                    "price": tableCell[2].getText() if tableCell[2].getText() != "N/A"  else None,
+                    "per":  tableCell[9].getText() if tableCell[9].getText() != "N/A"  else None,
+                    "roe":  tableCell[10].getText() if tableCell[10].getText() != "N/A" else None,
+                    "pbr":  tableCell[11].getText() if tableCell[11].getText() != "N/A" else None,
+                    "timestamp": datetime.datetime.now()
                 }
                 document = {
                     '_index': "stock-data-latest",
                     '_source': stockData,
                     '_id': code
                 }
+                logging.info(f"STOCK ID [{code}] info gathered from NAVER stock")
                 logging.info(document)
                 documents.append(document)
     return documents
@@ -44,7 +45,7 @@ def main():
     logging.basicConfig(
         filename='stock.log',
         format = '%(asctime)s:%(levelname)s:%(message)s',
-        datefmt = '%m/%d/%Y %I:%M:%S %p',
+        datefmt = '%m/%d/%Y %I:%M:%S %p %Z',
         level = logging.INFO,
         filemode="w"
     )
