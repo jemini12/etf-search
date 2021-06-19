@@ -65,7 +65,7 @@ def get_etf_info(id):
     etfProfit1M = float(etfProfits[0].get_attribute('innerText')) if etfProfits[0].get_attribute('innerText') else None
     etfProfit3M = float(etfProfits[1].get_attribute('innerText')) if etfProfits[1].get_attribute('innerText') else None
     etfProfit6M = float(etfProfits[2].get_attribute('innerText')) if etfProfits[2].get_attribute('innerText') else None
-    etfProfit12M = float(etfProfits[3].get_attribute('innerText'))_ if etfProfits[3].get_attribute('innerText') else None
+    etfProfit12M = float(etfProfits[3].get_attribute('innerText')) if etfProfits[3].get_attribute('innerText') else None
     etfProfits = {
                     "etfProfit1M": etfProfit1M,
                     "etfProfit3M": etfProfit3M,
