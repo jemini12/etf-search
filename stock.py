@@ -33,7 +33,7 @@ def get_stock_data(url,sosok):
                 }
                 document = {
                     "update" :{
-                        '_index': "stock-data-latest",
+                        '_index': "stock-data-v1",
                         '_source': stockData,
                         '_id': code
                     }

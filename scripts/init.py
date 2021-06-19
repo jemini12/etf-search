@@ -48,7 +48,7 @@ def get_stock_data(url,sosok):
                 }
                 document = {
                     "index" : {
-                        '_index': "stock-data-latest",
+                        '_index': "stock-data-v1",
                         '_source': stockData,
                         '_id': code
                     }
@@ -167,7 +167,7 @@ def etf():
         etfData = get_etf_info(etf)
         document = {
             "index" : {
-                '_index': "etf-search-latest",
+                '_index': "etf-search-v4",
                 '_source': etfData,
                 '_id': etf
             }

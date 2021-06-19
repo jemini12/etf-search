@@ -126,7 +126,7 @@ def main():
         etfData = get_etf_info(etf)
         document = {
             "update" : {
-                '_index': "etf-search-latest",
+                '_index': "etf-search-v4",
                 '_source': etfData,
                 '_id': etf
             }
