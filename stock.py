@@ -32,9 +32,11 @@ def get_stock_data(url,sosok):
                     "timestamp": datetime.datetime.now()
                 }
                 document = {
-                    '_index': "stock-data-latest",
-                    '_source': stockData,
-                    '_id': code
+                    "update" :{
+                        '_index': "stock-data-latest",
+                        '_source': stockData,
+                        '_id': code
+                    }
                 }
                 logging.info(f"STOCK ID [{code}] info gathered from NAVER stock")
                 logging.info(document)
