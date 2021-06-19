@@ -125,11 +125,10 @@ def main():
     for etf in etfTargets:
         etfData = get_etf_info(etf)
         document = {
-            "update" : {
-                '_index': "etf-search-v4",
-                '_source': etfData,
-                '_id': etf
-            }
+            "_op_type":"update",
+            '_index': "etf-search-v4",
+            '_source': etfData,
+            '_id': etf                                                                                      
         }
         logging.info(document)
         documents.append(document)

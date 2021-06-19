@@ -47,11 +47,10 @@ def get_stock_data(url,sosok):
                     "timestamp": datetime.datetime.now()
                 }
                 document = {
-                    "index" : {
-                        '_index': "stock-data-v1",
-                        '_source': stockData,
-                        '_id': code
-                    }
+                    "_op_type":'index',
+                    '_index': "stock-data-v1",
+                    '_source': stockData,
+                    '_id': code
                 }
                 logging.info(f"STOCK ID [{code}] info gathered from NAVER stock")
                 logging.info(document)
@@ -166,11 +165,11 @@ def etf():
     for etf in etfTargets:
         etfData = get_etf_info(etf)
         document = {
-            "index" : {
-                '_index': "etf-search-v4",
-                '_source': etfData,
-                '_id': etf
-            }
+            "_op_type":'index',
+            '_index': "etf-search-v4",
+            '_source': etfData,
+            '_id': etf
+            
         }
         logging.info(document)
         documents.append(document)
