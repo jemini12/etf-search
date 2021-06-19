@@ -26,9 +26,9 @@ def get_stock_data(url,sosok):
                     "stockName" : tableCell[1].getText() if tableCell[1].getText() != "N/A" else None,
                     "code": code,
                     "price": int(tableCell[2].getText().replace(",","")) if tableCell[2].getText() != "N/A"  else None,
-                    "per":  float(tableCell[9].getText()) if tableCell[9].getText() != "N/A"  else None,
-                    "roe":  float(tableCell[10].getText()) if tableCell[10].getText() != "N/A" else None,
-                    "pbr":  float(tableCell[11].getText()) if tableCell[11].getText() != "N/A" else None,
+                    "per":  float(tableCell[9].getText().replace(",","")) if tableCell[9].getText() != "N/A"  else None,
+                    "roe":  float(tableCell[10].getText().replace(",","")) if tableCell[10].getText() != "N/A" else None,
+                    "pbr":  float(tableCell[11].getText().replace(",","")) if tableCell[11].getText() != "N/A" else None,
                     "timestamp": datetime.datetime.now()
                 }
                 document = {
