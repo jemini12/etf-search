@@ -145,12 +145,20 @@ def get_etf_info(etfTargets,es,mode):
             "etfTypes": etfTypeList,
             "timestamp": datetime.datetime.now()
         }
-        document = {
-            "_op_type": mode,
-            '_index': "etf-search-v4",
-            'doc': etfData,
-            '_id': code
-        }
+        if mode == "update":
+            document = {
+                "_op_type": mode,
+                '_index': "etf-search-v4",
+                'doc': etfData,
+                '_id': code
+            }
+        elif mode == "index":
+            document = {
+                "_op_type": mode,
+                '_index': "etf-search-v4",
+                '_source': etfData,
+                '_id': code
+            }
         logging.info(document)
         documents.append(document)
         logging.info(f"ETF ID [{code}] info gathered from DAUM stock")

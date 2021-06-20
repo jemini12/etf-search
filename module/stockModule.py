@@ -32,12 +32,20 @@ def get_stock_data(url,sosok,mode):
                     "pbr":  float(tableCell[11].getText().replace(",","")) if tableCell[11].getText() != "N/A" else None,
                     "timestamp": datetime.datetime.now()
                 }
-                document = {
-                    "_op_type": mode,
-                    '_index': "stock-data-v1",
-                    'doc': stockData,
-                    '_id': code
-                }
+                if mode == "update":
+                    document = {
+                        "_op_type": mode,
+                        '_index': "stock-data-v1",
+                        'doc': stockData,
+                        '_id': code
+                    }
+                elif mode == "index":
+                    document = {
+                        "_op_type": mode,
+                        '_index': "stock-data-v1",
+                        '_source': stockData,
+                        '_id': code
+                    }
                 logging.info(f"STOCK ID [{code}] info gathered from NAVER stock")
                 logging.info(document)
                 documents.append(document)
