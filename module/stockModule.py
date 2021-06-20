@@ -4,15 +4,16 @@ import json
 import logging
 
 from elasticsearch import Elasticsearch, helpers
-from config import Config 
+import sys,os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+from conf.config import Config 
 from bs4 import BeautifulSoup
 
-def get_stock_data(url,sosok):
+def get_stock_data(url,sosok,mode):
     documents = []
     for i in range(0,100):
         res = requests.get(f"{url}?menu=market_sum&returnUrl=http%3A%2F%2Ffinance.naver.com%2Fsise%2Fsise_market_sum.nhn%3F%26sosok%3D{sosok}%26page%3D{i}&fieldIds=quant&fieldIds=market_sum&fieldIds=per&fieldIds=roe&fieldIds=frgn_rate&fieldIds=pbr")
         data = BeautifulSoup(res.text,"lxml")
-        tableHead = data.select("#contentarea > div.box_type_l > table.type_2 > thead")
         tableBody = data.select("#contentarea > div.box_type_l > table.type_2 > tbody > tr")
         
         if tableBody is None:
@@ -32,7 +33,7 @@ def get_stock_data(url,sosok):
                     "timestamp": datetime.datetime.now()
                 }
                 document = {
-                    "_op_type": "update",
+                    "_op_type": mode,
                     '_index': "stock-data-v1",
                     '_source': stockData,
                     '_id': code
@@ -60,16 +61,16 @@ def main():
     #https://finance.naver.com/sise/sise_market_sum.nhn?sosok=0
     #https://finance.naver.com/sise/field_submit.nhn?menu=market_sum&returnUrl=http%3A%2F%2Ffinance.naver.com%2Fsise%2Fsise_market_sum.nhn%3Fsosok%3D1%26page%3D3&fieldIds=quant&fieldIds=market_sum&fieldIds=per&fieldIds=roe&fieldIds=listed_stock_cnt&fieldIds=pbr
     es = Elasticsearch(
-    hosts=[{'host': "localhost", 'port': "9200"}])
+        hosts=[{'host': Config.ES_HOST, 'port': "9200"}])
     try: 
-        documents = get_stock_data("https://finance.naver.com/sise/field_submit.nhn",0)
+        documents = get_stock_data(Config.URL_NAVER_STOCK_LIST,0,"update")
         helpers.bulk(es, documents)
-        documents = get_stock_data("https://finance.naver.com/sise/field_submit.nhn",1)
+        documents = get_stock_data(Config.URL_NAVER_STOCK_LIST,1,"update")
         helpers.bulk(es, documents)
         logging.info("stock crawling end")
     except Exception as e:
         logging.info(e)
-    
+        
 if __name__ == "__main__":
     # execute only if run as a script
     main()

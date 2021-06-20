@@ -2,3 +2,4 @@ requests
 elasticsearch
 lxml
 bs4
+selenium

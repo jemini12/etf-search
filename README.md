@@ -5,9 +5,6 @@ This is search engine for etfsearch.info
 ```
 {
   "etf-search-v4" : {
-    "aliases" : {
-      "etf-search-latest" : { }
-    },
     "mappings" : {
       "properties" : {
         "etfDescription" : {
@@ -17,6 +14,24 @@ This is search engine for etfsearch.info
         "etfElements" : {
           "type" : "nested",
           "properties" : {
+            "code" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            },
+            "pbr" : {
+              "type" : "float"
+            },
+            "per" : {
+              "type" : "float"
+            },
+            "roe" : {
+              "type" : "float"
+            },
             "stockName" : {
               "type" : "text",
               "fields" : {
@@ -70,39 +85,6 @@ This is search engine for etfsearch.info
         },
         "timestamp" : {
           "type" : "date"
-        }
-      }
-    },
-    "settings" : {
-      "index" : {
-        "routing" : {
-          "allocation" : {
-            "include" : {
-              "_tier_preference" : "data_content"
-            }
-          }
-        },
-        "number_of_shards" : "1",
-        "provided_name" : "etf-search-v4",
-        "creation_date" : "1624032812093",
-        "analysis" : {
-          "analyzer" : {
-            "nori_analyzer" : {
-              "type" : "custom",
-              "tokenizer" : "korean_nori_tokenizer"
-            }
-          },
-          "tokenizer" : {
-            "korean_nori_tokenizer" : {
-              "type" : "nori_tokenizer",
-              "decompound_mode" : "mixed"
-            }
-          }
-        },
-        "number_of_replicas" : "1",
-        "uuid" : "52dBUK1lTpqyZYMpD50WxA",
-        "version" : {
-          "created" : "7120099"
         }
       }
     }
