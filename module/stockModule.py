@@ -35,7 +35,7 @@ def get_stock_data(url,sosok,mode):
                 document = {
                     "_op_type": mode,
                     '_index': "stock-data-v1",
-                    '_source': stockData,
+                    'doc': stockData,
                     '_id': code
                 }
                 logging.info(f"STOCK ID [{code}] info gathered from NAVER stock")
