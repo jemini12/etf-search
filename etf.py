@@ -55,7 +55,7 @@ def get_etf_info(id):
     for etfType in etfTypeInfo.split(","):
         etfTypeList.append(
             {
-                "etfType": etfType
+                "etfType": etfType.replace(" ","")
             })
         
 
