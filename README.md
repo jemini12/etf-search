@@ -5,7 +5,56 @@ This is search engine for etfsearch.info
 ```
 {
   "etf-search-v4" : {
+    "aliases" : {
+      "etf-search-latest" : { }
+    },
     "mappings" : {
+      "runtime" : {
+        "pbrAvg" : {
+          "type" : "double",
+          "script" : {
+            "source" : """
+              def roeAvg = null;
+              if (params['_source']['etfElements'].size() > 0){
+                float totalPortion = 0;
+                float roeSum = 0;
+              
+                for (int i = 0; i < params['_source']['etfElements'].size(); i++){
+                  if (params['_source']['etfElements'][i]['stockPortion'] != null && params['_source']['etfElements'][i]['roe'] != null){
+                    roeSum += (params['_source']['etfElements'][i]['stockPortion'] * params['_source']['etfElements'][i]['roe']);
+                    totalPortion += params['_source']['etfElements'][i]['stockPortion'];
+                  }
+                }
+                roeAvg = roeSum/totalPortion;
+              }
+              emit(roeAvg);
+        """,
+            "lang" : "painless"
+          }
+        },
+        "perAvg" : {
+          "type" : "double",
+          "script" : {
+            "source" : """
+              def perAvg = null;
+              if (params['_source']['etfElements'].size() > 0){
+                float totalPortion = 0;
+                float perSum = 0;
+              
+                for (int i = 0; i < params['_source']['etfElements'].size(); i++){
+                  if (params['_source']['etfElements'][i]['stockPortion'] != null && params['_source']['etfElements'][i]['per'] != null){
+                    perSum += (params['_source']['etfElements'][i]['stockPortion'] * params['_source']['etfElements'][i]['per']);
+                    totalPortion += params['_source']['etfElements'][i]['stockPortion'];
+                  }
+                }
+                perAvg = perSum/totalPortion;
+              }
+              emit(perAvg);
+        """,
+            "lang" : "painless"
+          }
+        }
+      },
       "properties" : {
         "etfDescription" : {
           "type" : "text",
@@ -87,9 +136,43 @@ This is search engine for etfsearch.info
           "type" : "date"
         }
       }
+    },
+    "settings" : {
+      "index" : {
+        "routing" : {
+          "allocation" : {
+            "include" : {
+              "_tier_preference" : "data_content"
+            }
+          }
+        },
+        "number_of_shards" : "1",
+        "provided_name" : "etf-search-v4",
+        "creation_date" : "1624199261636",
+        "analysis" : {
+          "analyzer" : {
+            "nori_analyzer" : {
+              "type" : "custom",
+              "tokenizer" : "korean_nori_tokenizer"
+            }
+          },
+          "tokenizer" : {
+            "korean_nori_tokenizer" : {
+              "type" : "nori_tokenizer",
+              "decompound_mode" : "mixed"
+            }
+          }
+        },
+        "number_of_replicas" : "1",
+        "uuid" : "7EigMlIESkO3eLayzycZBQ",
+        "version" : {
+          "created" : "7120099"
+        }
+      }
     }
   }
 }
+
 
 {
   "stock-data-v1" : {
