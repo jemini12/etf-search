@@ -14,21 +14,23 @@ This is search engine for etfsearch.info
           "type" : "double",
           "script" : {
             "source" : """
-              def roeAvg = null;
-              if (params['_source']['etfElements'].size() > 0){
-                float totalPortion = 0;
-                float roeSum = 0;
+            def pbrAvg = null;
+            if (params['_source']['etfElements'].size() > 0){
+              float totalPortion = 0;
+              float pbrSum = 0;
               
-                for (int i = 0; i < params['_source']['etfElements'].size(); i++){
-                  if (params['_source']['etfElements'][i]['stockPortion'] != null && params['_source']['etfElements'][i]['roe'] != null){
-                    roeSum += (params['_source']['etfElements'][i]['stockPortion'] * params['_source']['etfElements'][i]['roe']);
-                    totalPortion += params['_source']['etfElements'][i]['stockPortion'];
+              for (int i = 0; i < params['_source']['etfElements'].size(); i++){
+                if (params['_source']['etfElements'][i]['stockPortion'] != null && params['_source']['etfElements'][i]['pbr'] != null){
+                  if (params['_source']['etfElements'][i]['pbr'] > 0) {
+                  pbrSum += (params['_source']['etfElements'][i]['stockPortion'] * params['_source']['etfElements'][i]['pbr']);
+                  totalPortion += params['_source']['etfElements'][i]['stockPortion'];
                   }
                 }
-                roeAvg = roeSum/totalPortion;
               }
-              emit(roeAvg);
-        """,
+              pbrAvg = pbrSum/totalPortion;
+            }
+            emit(pbrAvg);
+          """,
             "lang" : "painless"
           }
         },
@@ -36,21 +38,48 @@ This is search engine for etfsearch.info
           "type" : "double",
           "script" : {
             "source" : """
-              def perAvg = null;
-              if (params['_source']['etfElements'].size() > 0){
-                float totalPortion = 0;
-                float perSum = 0;
+            def perAvg = null;
+            if (params['_source']['etfElements'].size() > 0) {
+              float totalPortion = 0;
+              float perSum = 0;
               
-                for (int i = 0; i < params['_source']['etfElements'].size(); i++){
-                  if (params['_source']['etfElements'][i]['stockPortion'] != null && params['_source']['etfElements'][i]['per'] != null){
+              for (int i = 0; i < params['_source']['etfElements'].size(); i++){
+                if (params['_source']['etfElements'][i]['stockPortion'] != null && params['_source']['etfElements'][i]['per'] != null){
+                  if (params['_source']['etfElements'][i]['per']) {
                     perSum += (params['_source']['etfElements'][i]['stockPortion'] * params['_source']['etfElements'][i]['per']);
                     totalPortion += params['_source']['etfElements'][i]['stockPortion'];
                   }
                 }
-                perAvg = perSum/totalPortion;
               }
-              emit(perAvg);
-        """,
+              perAvg = perSum/totalPortion;
+            }
+            emit(perAvg);
+            // params['_source']['etfElements'].size()
+          """,
+            "lang" : "painless"
+          }
+        },
+        "roeAvg" : {
+          "type" : "double",
+          "script" : {
+            "source" : """
+            def roeAvg = null;
+            if (params['_source']['etfElements'].size() > 0){
+              float totalPortion = 0;
+              float roeSum = 0;
+              
+              for (int i = 0; i < params['_source']['etfElements'].size(); i++){
+                if (params['_source']['etfElements'][i]['stockPortion'] != null && params['_source']['etfElements'][i]['roe'] != null){
+                  if (params['_source']['etfElements'][i]['roe'] > 0) {
+                  roeSum += (params['_source']['etfElements'][i]['stockPortion'] * params['_source']['etfElements'][i]['roe']);
+                  totalPortion += params['_source']['etfElements'][i]['stockPortion'];
+                  }
+                }
+              }
+              roeAvg = roeSum/totalPortion;
+            }
+            emit(roeAvg);
+          """,
             "lang" : "painless"
           }
         }
