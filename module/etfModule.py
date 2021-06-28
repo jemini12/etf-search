@@ -29,7 +29,7 @@ def get_stock_info(stockName,es):
                 }
             },
             "_source": {
-                "includes": ["code", "per", "roe", "pbr"]
+                "includes": ["code", "per", "roe", "pbr", "stockMarketCap", "stockNetIncome", "stockQuant"]
             }
         }
         data = es.search(query,index='stock-data-latest',  filter_path=['hits.hits._source'])
@@ -128,7 +128,10 @@ def get_etf_info(etfTargets,es,mode):
                         "stockPortion": stockPortion,
                         "per": metaData['per'],
                         "roe": metaData["roe"],
-                        "pbr": metaData["pbr"]
+                        "pbr": metaData["pbr"],
+                        "stockQuant": metaData["stockQuant"],
+                        "stockNetIncome": metaData["stockNetIncome"],
+                        "stockMarketCap": metaData["stockMarketCap"]   
                     })
             else:
                 etfElements.append(

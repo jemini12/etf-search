@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 def get_stock_data(url,sosok,mode):
     documents = []
     for i in range(0,100):
-        res = requests.get(f"{url}?menu=market_sum&returnUrl=http%3A%2F%2Ffinance.naver.com%2Fsise%2Fsise_market_sum.nhn%3F%26sosok%3D{sosok}%26page%3D{i}&fieldIds=quant&fieldIds=market_sum&fieldIds=per&fieldIds=roe&fieldIds=frgn_rate&fieldIds=pbr")
+        res = requests.get(f"{url}?menu=market_sum&returnUrl=http%3A%2F%2Ffinance.naver.com%2Fsise%2Fsise_market_sum.nhn%3F%26sosok%3D{sosok}%26page%3D{i}&fieldIds=market_sum&fieldIds=per&fieldIds=roe&fieldIds=net_income&fieldIds=listed_stock_cnt&fieldIds=pbr")
         data = BeautifulSoup(res.text,"lxml")
         tableBody = data.select("#contentarea > div.box_type_l > table.type_2 > tbody > tr")
         
@@ -27,6 +27,9 @@ def get_stock_data(url,sosok,mode):
                     "stockName" : tableCell[1].getText() if tableCell[1].getText() != "N/A" else None,
                     "code": code,
                     "price": int(tableCell[2].getText().replace(",","")) if tableCell[2].getText() != "N/A"  else None,
+                    "stockQuant": int(tableCell[6].getText().replace(",","")) * 1000 if tableCell[6].getText() != "N/A"  else None,
+                    "stockMarketCap": int(tableCell[7].getText().replace(",","")) * 100000000 if tableCell[7].getText() != "N/A"  else None,
+                    "stockNetIncome": int(tableCell[8].getText().replace(",","")) * 100000000 if tableCell[8].getText() != "N/A"  else None,
                     "per":  float(tableCell[9].getText().replace(",","")) if tableCell[9].getText() != "N/A"  else None,
                     "roe":  float(tableCell[10].getText().replace(",","")) if tableCell[10].getText() != "N/A" else None,
                     "pbr":  float(tableCell[11].getText().replace(",","")) if tableCell[11].getText() != "N/A" else None,

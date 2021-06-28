@@ -45,7 +45,7 @@ This is search engine for etfsearch.info
               
               for (int i = 0; i < params['_source']['etfElements'].size(); i++){
                 if (params['_source']['etfElements'][i]['stockPortion'] != null && params['_source']['etfElements'][i]['per'] != null){
-                  if (params['_source']['etfElements'][i]['per']) {
+                  if (params['_source']['etfElements'][i]['per'] > 0) {
                     perSum += (params['_source']['etfElements'][i]['stockPortion'] * params['_source']['etfElements'][i]['per']);
                     totalPortion += params['_source']['etfElements'][i]['stockPortion'];
                   }
@@ -110,6 +110,9 @@ This is search engine for etfsearch.info
             "roe" : {
               "type" : "float"
             },
+            "stockMarketCap" : {
+              "type" : "long"
+            },
             "stockName" : {
               "type" : "text",
               "fields" : {
@@ -120,8 +123,14 @@ This is search engine for etfsearch.info
               },
               "analyzer" : "nori_analyzer"
             },
+            "stockNetIncome" : {
+              "type" : "long"
+            },
             "stockPortion" : {
               "type" : "float"
+            },
+            "stockQuant" : {
+              "type" : "long"
             }
           }
         },
@@ -203,6 +212,7 @@ This is search engine for etfsearch.info
 }
 
 
+
 {
   "stock-data-v1" : {
     "aliases" : {
@@ -225,8 +235,22 @@ This is search engine for etfsearch.info
         "roe" : {
           "type" : "float"
         },
+        "stockMarketCap" : {
+          "type" : "long"
+        },
         "stockName" : {
-          "type" : "keyword"
+          "type" : "keyword",
+          "fields" : {
+            "text" : {
+              "type" : "text"
+            }
+          }
+        },
+        "stockNetIncome" : {
+          "type" : "long"
+        },
+        "stockQuant" : {
+          "type" : "long"
         },
         "timestamp" : {
           "type" : "date"
