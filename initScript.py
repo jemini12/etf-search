@@ -40,7 +40,7 @@ def etfInit():
     etfTargets = etfmodule.get_etf_list(Config.URL_NAVER_ETF_LIST)
     #etfTargets = ["105780"] #for test
     es = Elasticsearch(
-        hosts=[{'host': "192.168.219.108", 'port': "9200"}])
+        hosts=[{'host': Config.ES_HOST, 'port': "9200"}])
     logging.info("etf crawling initialize start")
     documents = etfmodule.get_etf_info(etfTargets,es,"index")
     try:      

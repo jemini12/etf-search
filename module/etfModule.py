@@ -119,19 +119,26 @@ def get_etf_info(etfTargets,es,mode):
                 'innerText')) if row.find_element_by_class_name("c3").get_attribute('innerText') != "-" else None
 
             # GET stock information from Elasticsearch
-            metaData = get_stock_info(stockName,es)
-            if metaData:
-                etfElements.append(
+            if stockPortion:
+                metaData = get_stock_info(stockName,es)
+                if metaData:
+                    etfElements.append(
+                        {
+                            "stockName": stockName,
+                            "code": metaData["code"],
+                            "stockPortion": stockPortion,
+                            "per": metaData['per'],
+                            "roe": metaData["roe"],
+                            "pbr": metaData["pbr"],
+                            "stockQuant": metaData["stockQuant"],
+                            "stockNetIncome": metaData["stockNetIncome"],
+                            "stockMarketCap": metaData["stockMarketCap"]   
+                        })
+                else:
+                    etfElements.append(
                     {
                         "stockName": stockName,
-                        "code": metaData["code"],
                         "stockPortion": stockPortion,
-                        "per": metaData['per'],
-                        "roe": metaData["roe"],
-                        "pbr": metaData["pbr"],
-                        "stockQuant": metaData["stockQuant"],
-                        "stockNetIncome": metaData["stockNetIncome"],
-                        "stockMarketCap": metaData["stockMarketCap"]   
                     })
             else:
                 etfElements.append(
